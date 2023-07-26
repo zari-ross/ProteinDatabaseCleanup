@@ -8,7 +8,7 @@ How to Use:
 
     Download the latest Uniprot entries for the selected organism. Download all in fasta (gz-archive), do not include multiple isoforms - it will significantly complicate the deduplication.
     Clone this repository to your local machine.
-    Ensure that you have Bash installed and that the scripts have execute permissions.
+    Ensure that you have Bash installed and that the scripts have execute permissions (Ensure that your scripts have execute permissions. You can do this with the chmod command. For example, chmod +x script.sh gives the script execute permissions.).
     Run the ProteinDatabaseCleanup.sh script with your protein database as an argument.
 
 Requirements:
