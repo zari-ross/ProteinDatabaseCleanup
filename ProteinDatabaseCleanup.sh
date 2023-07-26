@@ -9,6 +9,9 @@ LOG_FILE="sequence_counts.log"
 REMOVED="removed_sequences.fasta"
 FINAL_OUTPUT="final_output.fasta"
 
+# The path to your Biopython environment's Python interpreter
+PYTHON="/mnt/c/Users/NITru/miniconda3/envs/biopy/python.exe"
+
 # Define the Python script path
 PYTHON_SCRIPT_PATH="./process_fasta.py"
 
@@ -63,7 +66,7 @@ prepare_sequences "$INPUT" "$OUTPUT" "$REMOVED"
 log_counts "$OUTPUT" "Count after cleaning"
 log_counts "$REMOVED" "Count of removed sequences"
 # Call Python script from bash
-python3 $PYTHON_SCRIPT_PATH $OUTPUT $FINAL_OUTPUT
+$PYTHON $PYTHON_SCRIPT_PATH $OUTPUT $FINAL_OUTPUT
 log_counts "$FINAL_OUTPUT" "Final count"
 
 # Get the end time and calculate the duration
