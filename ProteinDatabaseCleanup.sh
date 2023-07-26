@@ -9,6 +9,9 @@ LOG_FILE="sequence_counts.log"
 REMOVED="removed_sequences.fasta"
 FINAL_OUTPUT="final_output.fasta"
 
+# Define the Python script path
+PYTHON_SCRIPT_PATH="./process_fasta.py"
+
 # Get the start time
 START_TIME=$(date +%s)
 echo "Script started at $(date)" >> "$LOG_FILE"
@@ -54,46 +57,13 @@ prepare_sequences() {
   rm "$lin_fasta_file"
 }
 
-# This function sorts sequences by length, SwissProt status, and gene names. It also deduplicates sequences.
-sort_and_deduplicate_sequences() {
-  local input_fasta=$1
-  local output_fasta=$2
-
-  gawk '/^>/ { gsub(" ","*"); if (seq) { print header; print seq } header=$0; seq="" } !/^>/ { seq = seq $0 } END { print header; print seq }' "$input_fasta" |\
-  awk -v RS='>' -v ORS='' '
-  {
-      if(NR>1) {
-          header=$1; sub(/^[^\n]*\n/, "", $0); seq=$0
-          if(header ~ /^sp\|/){
-              db = "sp"
-          }else if(header ~ /^tr\|/){
-              db = "tr"
-          }else{
-              db = "other"
-          }
-          len = length(seq)
-          if(!(header in headers)) {
-            data[db, header, -len] = seq
-            headers[header]
-          }
-      }
-  }
-  END {
-      PROCINFO["sorted_in"] = "@ind_str_asc"
-      for (ind in data) {
-          split(ind, arr, SUBSEP)
-          gsub("*"," ",arr[2])
-          print ">" arr[2] "\n" data[ind]
-      }
-  }' > "$output_fasta"
-}
-
 # Call the functions
 log_counts "$INPUT" "Original count"
 prepare_sequences "$INPUT" "$OUTPUT" "$REMOVED"
 log_counts "$OUTPUT" "Count after cleaning"
 log_counts "$REMOVED" "Count of removed sequences"
-sort_and_deduplicate_sequences "$OUTPUT" "$FINAL_OUTPUT"
+# Call Python script from bash
+python3 $PYTHON_SCRIPT_PATH $OUTPUT $FINAL_OUTPUT
 log_counts "$FINAL_OUTPUT" "Final count"
 
 # Get the end time and calculate the duration
