@@ -4,7 +4,7 @@
 
 # Variables
 INPUT="uniprot_proteome_mouse.fasta"
-OUTPUT="prepared_mouse_database.fasta"
+OUTPUT="prepared_database.fasta"
 LOG_FILE="sequence_counts.log"
 REMOVED="removed_sequences.fasta"
 FINAL_OUTPUT="final_output.fasta"
